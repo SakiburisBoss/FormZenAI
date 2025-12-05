@@ -1,0 +1,38 @@
+import AiGeneratedForm from "@/components/form/AIGeneratedForm";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import prisma from "@/lib/prisma";
+
+const Edit = async ({ params }: { params: Promise<{ formId: string }> }) => {
+  "use cache";
+  const formId = (await params).formId;
+
+  if (!formId) {
+    return <h1>No form id found for id {formId}</h1>;
+  }
+
+  const form: any = await prisma.form.findUnique({
+    where: {
+      id: Number(formId),
+    },
+  });
+
+  if (!form) {
+    return <h1>Form not found</h1>;
+  }
+
+  return (
+    <Card>
+      <CardHeader>
+        <CardTitle>
+          <h1 className="font-bold text-2xl text-center">
+            {form.content.formTitle || "NA"}
+          </h1>
+        </CardTitle>
+      </CardHeader>
+      <CardContent>
+        <AiGeneratedForm form={form} isEditMode={true} />
+      </CardContent>
+    </Card>
+  );
+};
+export default Edit;
