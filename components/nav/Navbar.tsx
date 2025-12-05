@@ -22,7 +22,10 @@ export default function Navbar({
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
-  const links = [{ href: "/forms", label: "Forms" }];
+  const links = [
+    { href: "/forms", label: "Forms" },
+    { href: "/pricing", label: "Pricing" },
+  ];
 
   return (
     <nav className="w-full fixed top-0 left-0 z-50">

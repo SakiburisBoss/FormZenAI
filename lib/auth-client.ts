@@ -1,3 +1,4 @@
+import { polarClient } from "@polar-sh/better-auth";
 import {
   anonymousClient,
   inferAdditionalFields,
@@ -7,7 +8,11 @@ import type { auth } from "./auth";
 
 export const authClient = createAuthClient({
   baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000",
-  plugins: [anonymousClient(), inferAdditionalFields<typeof auth>()],
+  plugins: [
+    anonymousClient(),
+    inferAdditionalFields<typeof auth>(),
+    polarClient(),
+  ],
 });
 
 // Export inferred types for client-side use

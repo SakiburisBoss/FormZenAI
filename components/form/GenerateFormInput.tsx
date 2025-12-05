@@ -38,11 +38,13 @@ const GenerateFormInput: React.FC<Props> = ({
   );
 
   useEffect(() => {
-    if (state.success) {
-      toast(state.message);
-      router.push("/forms");
-    } else {
-      toast.error(state.message);
+    if (state.message) {
+      if (state.success) {
+        toast(state.message);
+        router.push("/forms");
+      } else {
+        toast.error(state.message);
+      }
     }
   }, [state, router]);
 
