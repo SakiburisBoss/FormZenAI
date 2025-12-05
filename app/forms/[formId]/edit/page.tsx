@@ -1,5 +1,5 @@
 import AiGeneratedForm from "@/components/form/AIGeneratedForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
 
 const Edit = async ({ params }: { params: Promise<{ formId: string }> }) => {
@@ -22,13 +22,6 @@ const Edit = async ({ params }: { params: Promise<{ formId: string }> }) => {
 
   return (
     <Card>
-      <CardHeader>
-        <CardTitle>
-          <h1 className="font-bold text-2xl text-center">
-            {form.content.formTitle || "NA"}
-          </h1>
-        </CardTitle>
-      </CardHeader>
       <CardContent>
         <AiGeneratedForm form={form} isEditMode={true} />
       </CardContent>

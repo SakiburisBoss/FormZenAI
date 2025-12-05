@@ -38,7 +38,7 @@ const HeroSection: React.FC<Props> = ({ totalForms, isSubscribed }) => {
       <div className="relative space-y-4">
         <div className="absolute inset-0 bg-gradient-to-r from-blue-500/20 to-purple-600/20 blur-3xl opacity-60 -z-10 rounded-full"></div>
 
-        <div className="text-center space-y-6 px-4 py-4">
+        <div className="text-center space-y-6 px-4">
           <h1 className="text-5xl md:text-6xl lg:text-7xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
             Build AI-Driven Forms Effortlessly
           </h1>

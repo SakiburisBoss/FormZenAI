@@ -1,5 +1,5 @@
 import AiGeneratedForm from "@/components/form/AIGeneratedForm";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Card, CardContent } from "@/components/ui/card";
 import prisma from "@/lib/prisma";
 
 const SubmitForm = async ({
@@ -20,13 +20,6 @@ const SubmitForm = async ({
   });
   return (
     <Card className="max-w-xl mx-auto py-10">
-      <CardHeader>
-        <CardTitle>
-          <h1 className="font-bold text-2xl text-center">
-            {form.content.formTitle || "NA"}
-          </h1>
-        </CardTitle>
-      </CardHeader>
       <CardContent>
         <AiGeneratedForm form={form} isEditMode={false} />
       </CardContent>

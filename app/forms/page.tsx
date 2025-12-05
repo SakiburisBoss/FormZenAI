@@ -65,7 +65,7 @@ const FormsContent = async ({
         <div className="relative">
           <div className="absolute inset-0 bg-gradient-to-r from-blue-500/10 to-purple-600/10 blur-3xl opacity-60 -z-10 rounded-full"></div>
 
-          <div className="text-center space-y-4 mb-8 pt-4">
+          <div className="text-center space-y-4 mb-8">
             <h1 className="text-4xl md:text-5xl font-extrabold tracking-tight bg-gradient-to-r from-blue-600 to-purple-600 bg-clip-text text-transparent">
               My Forms Dashboard
             </h1>
