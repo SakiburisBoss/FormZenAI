@@ -139,11 +139,11 @@ export const auth = betterAuth({
         checkout({
           products: [
             {
-              productId: "90782d4d-c02c-4578-88b3-be4d36dde0a8",
+              productId: "c24ea16e-2ac8-42b4-945c-86ec7df65357",
               slug: "PRO",
             },
             {
-              productId: "f8cf99ba-d481-40a2-9605-d97192640cb8",
+              productId: "6181ba61-ba3d-473b-9334-c32a9a68438f",
               slug: "ENTERPRISE",
             },
           ],

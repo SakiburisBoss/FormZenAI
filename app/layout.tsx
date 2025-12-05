@@ -40,7 +40,7 @@ export default function RootLayout({
         <footer>
           <div className="w-full h-20 border-t flex items-center justify-center">
             <p className="text-sm text-gray-500">
-              &copy; 2025 Form Zen AI. All rights reserved. Created by Sakibur.
+              &copy; 2026 Form Zen AI. All rights reserved. Created by Sakibur.
             </p>
           </div>
         </footer>

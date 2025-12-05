@@ -43,14 +43,14 @@ export const pricingPlans: PricingPlan[] = [
       "Export submissions",
       "Integration APIs",
     ],
-    productId: "90782d4d-c02c-4578-88b3-be4d36dde0a8",
+    productId: "c24ea16e-2ac8-42b4-945c-86ec7df65357",
     popular: true,
     gradient: "from-blue-500 to-purple-600",
   },
   {
     name: "Enterprise",
     slug: "ENTERPRISE",
-    price: "$29",
+    price: "$19.99",
     priceMonthly: "per month",
     description: "For large organizations with advanced needs",
     features: [
@@ -64,7 +64,7 @@ export const pricingPlans: PricingPlan[] = [
       "SLA guarantee",
       "White-label solution",
     ],
-    productId: "f8cf99ba-d481-40a2-9605-d97192640cb8",
+    productId: "6181ba61-ba3d-473b-9334-c32a9a68438f",
     gradient: "from-purple-600 to-pink-600",
   },
 ];
