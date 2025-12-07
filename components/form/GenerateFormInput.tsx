@@ -23,14 +23,9 @@ const initialState: InitialState = {
 type Props = {
   text?: string;
   totalForms?: number;
-  isSubscribed?: boolean;
 };
 
-const GenerateFormInput: React.FC<Props> = ({
-  text,
-  totalForms,
-  isSubscribed,
-}) => {
+const GenerateFormInput: React.FC<Props> = ({ text, totalForms }) => {
   const router = useRouter();
   const [state, formAction, isPending] = useActionState(
     generateForm,
@@ -64,7 +59,7 @@ const GenerateFormInput: React.FC<Props> = ({
         />
       </div>
 
-      {isSubscribed || totalForms! < MAX_FREE_FORMS ? (
+      {totalForms! < MAX_FREE_FORMS ? (
         <Button
           disabled={isPending}
           className="h-14 px-8 bg-gradient-to-r from-blue-500 to-purple-600 hover:from-blue-600 hover:to-purple-700 text-white font-semibold rounded-xl shadow-lg hover:shadow-xl transition-all duration-300 hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:hover:scale-100"
@@ -85,11 +80,11 @@ const GenerateFormInput: React.FC<Props> = ({
       ) : (
         <Button
           disabled
-          className="h-14 px-8 rounded-xl font-semibold"
+          className="h-14 px-8 rounded-xl font-semibold bg-gray-200 dark:bg-gray-800 text-gray-600 dark:text-gray-400"
           variant="outline"
         >
           <Lock className="w-5 h-5 mr-2" />
-          Upgrade Plan
+          Form Limit Reached
         </Button>
       )}
     </form>

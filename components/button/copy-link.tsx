@@ -6,15 +6,32 @@ import { useState } from "react";
 import { toast } from "sonner";
 
 type CopyLinkButtonProps = {
-  formId: number | string;
+  formId?: number | string;
+  shareUrl?: string;
   className?: string;
+  variant?:
+    | "default"
+    | "outline"
+    | "ghost"
+    | "link"
+    | "destructive"
+    | "secondary";
+  size?: "default" | "sm" | "lg" | "icon";
 };
 
-export function CopyLinkButton({ formId, className }: CopyLinkButtonProps) {
+export function CopyLinkButton({
+  formId,
+  shareUrl,
+  className,
+  variant = "default",
+  size = "sm",
+}: CopyLinkButtonProps) {
   const [copied, setCopied] = useState(false);
 
   const handleCopyLink = () => {
-    const link = `${window.location.origin}/forms/${formId}`;
+    const link = shareUrl
+      ? `${window.location.origin}/submit/${shareUrl}`
+      : `${window.location.origin}/forms/${formId}`;
 
     navigator.clipboard.writeText(link).then(
       () => {
@@ -33,8 +50,9 @@ export function CopyLinkButton({ formId, className }: CopyLinkButtonProps) {
     <Button
       onClick={handleCopyLink}
       className={className}
-      size="sm"
-      title={"Copy form link"}
+      variant={variant}
+      size={size}
+      title="Copy form link"
     >
       {copied ? (
         <>

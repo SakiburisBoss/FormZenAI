@@ -24,7 +24,7 @@ export default function Navbar({
 
   const links = [
     { href: "/forms", label: "Forms" },
-    { href: "/pricing", label: "Pricing" },
+    { href: "/about", label: "About" },
   ];
 
   return (

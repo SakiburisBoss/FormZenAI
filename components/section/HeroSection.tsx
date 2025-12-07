@@ -1,6 +1,5 @@
 "use client";
 import { MAX_FREE_FORMS } from "@/lib/utils";
-import Link from "next/link";
 import React, { useState } from "react";
 import GenerateFormInput from "../form/GenerateFormInput";
 import { Button } from "../ui/button";
@@ -27,10 +26,9 @@ const suggestionBtnText: SuggestionText[] = [
 
 type Props = {
   totalForms: number;
-  isSubscribed: boolean;
 };
 
-const HeroSection: React.FC<Props> = ({ totalForms, isSubscribed }) => {
+const HeroSection: React.FC<Props> = ({ totalForms }) => {
   const [text, setText] = useState<string>("");
 
   return (
@@ -117,24 +115,15 @@ const HeroSection: React.FC<Props> = ({ totalForms, isSubscribed }) => {
         </div>
 
         <div className="max-w-3xl mx-auto px-4">
-          <GenerateFormInput
-            text={text}
-            totalForms={totalForms}
-            isSubscribed={isSubscribed}
-          />
+          <GenerateFormInput text={text} totalForms={totalForms} />
         </div>
 
-        {!isSubscribed && (
-          <div className="text-center space-y-2 px-4">
-            <p className="text-sm font-medium text-orange-600 dark:text-orange-400">
-              You have {MAX_FREE_FORMS - totalForms} free forms remaining
+        {totalForms < MAX_FREE_FORMS && (
+          <div className="text-center px-4">
+            <p className="text-sm font-medium text-blue-600 dark:text-blue-400">
+              You have {MAX_FREE_FORMS - totalForms} of {MAX_FREE_FORMS} free
+              forms remaining
             </p>
-            <Link
-              className="inline-block text-sm font-semibold text-blue-600 dark:text-blue-400 hover:underline underline-offset-4 transition-all"
-              href="/pricing"
-            >
-              Upgrade to premium for unlimited forms →
-            </Link>
           </div>
         )}
       </div>

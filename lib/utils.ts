@@ -5,4 +5,4 @@ export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs));
 }
 
-export const MAX_FREE_FORMS = 8;
+export const MAX_FREE_FORMS = 15;

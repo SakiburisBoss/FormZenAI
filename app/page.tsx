@@ -19,15 +19,9 @@ const HomePageContent = async () => {
 
   const totalForms = await getTotalFormsOfUser(user.id);
 
-  const isSubscribed =
-    user !== null &&
-    user !== undefined &&
-    (user.subscription === "PRO" || user.subscription === "ENTERPRISE") &&
-    !user.isAnonymous;
-
   return (
     <div className="flex items-center justify-center min-h-screen py-12 px-4 sm:px-6 lg:px-8">
-      <HeroSection totalForms={totalForms} isSubscribed={isSubscribed} />
+      <HeroSection totalForms={totalForms} />
     </div>
   );
 };
