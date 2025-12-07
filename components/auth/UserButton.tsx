@@ -12,6 +12,7 @@ import {
 
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { LogOut, Settings } from "lucide-react";
 import { ProfileModal } from "./ProfileModal";
 
 export function UserButton() {
@@ -49,10 +50,12 @@ export function UserButton() {
 
       <DropdownMenuContent align="end" className="w-56">
         <DropdownMenuItem onClick={() => setOpenProfile(true)}>
+          <Settings className="w-4 h-4 mr-4" />
           Manage Profile
         </DropdownMenuItem>
         <DropdownMenuItem onClick={handleSignOut} className="text-red-600">
-          Sign out
+          <LogOut className="w-4 h-4 mr-4" />
+          Sign Out
         </DropdownMenuItem>
       </DropdownMenuContent>
 
