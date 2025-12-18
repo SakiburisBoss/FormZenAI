@@ -9,7 +9,7 @@ import * as z from "zod";
 const signInSchema = z.object({
   email: z.email("Invalid email address"),
   password: z.string().min(6, "Password must be at least 6 characters"),
-  callbackURL: z.string(),
+  callbackURL: z.string().optional(),
 });
 
 const signUpSchema = z.object({
@@ -21,21 +21,31 @@ const signUpSchema = z.object({
     .regex(/[A-Z]/, "Password must contain at least one uppercase letter")
     .regex(/[a-z]/, "Password must contain at least one lowercase letter")
     .regex(/[0-9]/, "Password must contain at least one number"),
-  callbackURL: z.string(),
+  callbackURL: z.string().optional(),
 });
 
-export const signUp = async (prevState: any, formData: FormData) => {
+const coerceToString = (value: FormDataEntryValue | null) => {
+  if (value === null) return "";
+  if (typeof value === "string") return value;
+
+  return "";
+};
+
+export const signUp = async (formData: FormData) => {
+  let redirectTo: string | undefined;
+
   try {
     const rawData = {
-      name: formData.get("name"),
-      email: formData.get("email"),
-      password: formData.get("password"),
-      callbackURL: formData.get("callbackURL"),
+      name: coerceToString(formData.get("name")),
+      email: coerceToString(formData.get("email")),
+      password: coerceToString(formData.get("password")),
+      callbackURL: coerceToString(formData.get("callbackURL")),
     };
 
     const result = signUpSchema.safeParse(rawData);
     if (!result.success) {
-      return { error: result.error.issues[0].message };
+      const msg = result.error?.issues?.[0]?.message ?? "Validation error";
+      redirect(`/auth?error=${encodeURIComponent(msg)}`);
     }
 
     const validatedData = result.data;
@@ -50,26 +60,38 @@ export const signUp = async (prevState: any, formData: FormData) => {
     });
 
     if (!authResult.user) {
-      return { error: "Failed to create account. Please try again." };
+      redirect(
+        `/auth?error=${encodeURIComponent("Failed to create an Account.Please try again")}`,
+      );
     }
 
-    return { success: true };
+    revalidatePath(validatedData.callbackURL ?? "/");
+    redirectTo = validatedData.callbackURL ?? "/";
   } catch (error) {
-    return { error: "An unexpected error occurred. Please try again." };
+    redirect(
+      `/auth?error=${encodeURIComponent("An unexpected error occurred. Please try again")}`,
+    );
+  }
+
+  if (redirectTo) {
+    redirect(redirectTo);
   }
 };
 
-export const signIn = async (prevState: any, formData: FormData) => {
+export const signIn = async (formData: FormData) => {
+  let redirectTo: string | undefined;
+
   try {
     const rawData = {
-      email: formData.get("email"),
-      password: formData.get("password"),
-      callbackURL: formData.get("callbackURL"),
+      email: coerceToString(formData.get("email")),
+      password: coerceToString(formData.get("password")),
+      callbackURL: coerceToString(formData.get("callbackURL")),
     };
 
     const result = signInSchema.safeParse(rawData);
     if (!result.success) {
-      return { error: result.error.issues[0].message };
+      const msg = result.error?.issues?.[0]?.message ?? "Validation error";
+      redirect(`/auth?error=${encodeURIComponent(msg)}`);
     }
 
     const validatedData = result.data;
@@ -83,12 +105,20 @@ export const signIn = async (prevState: any, formData: FormData) => {
     });
 
     if (!authResult.user) {
-      return { error: "Invalid email or password" };
+      redirect(
+        `/auth?error=${encodeURIComponent("Invalid email or password")}`,
+      );
     }
-
-    return { success: true };
+    revalidatePath(validatedData.callbackURL ?? "/");
+    redirectTo = validatedData.callbackURL ?? "/";
   } catch (error) {
-    return { error: "An unexpected error occurred. Please try again." };
+    redirect(
+      `/auth?error=${encodeURIComponent("An unexpected error occurred. Please try again")}`,
+    );
+  }
+
+  if (redirectTo) {
+    redirect(redirectTo);
   }
 };
 
@@ -98,15 +128,18 @@ export const signInSocial = async (
 ) => {
   const { url } = await auth.api.signInSocial({
     body: {
-      provider,
+      provider: provider,
       callbackURL: callbackURL,
     },
   });
 
-  if (url) {
-    redirect(url);
+  if (!url) {
+    redirect(`/auth?error=${encodeURIComponent("Social Log in failed")}`);
   }
+  revalidatePath(url);
+  redirect(url);
 };
+
 export const signOut = async ({ callbackURL }: { callbackURL: string }) => {
   await auth.api.signOut({ headers: await headers() });
   revalidatePath(callbackURL);

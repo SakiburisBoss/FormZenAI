@@ -7,6 +7,7 @@ import {
   SheetTitle,
   SheetTrigger,
 } from "@/components/ui/sheet";
+import { User } from "@/lib/auth";
 import { cn } from "@/lib/utils";
 import { Menu, Sparkles, X } from "lucide-react";
 import Link from "next/link";
@@ -14,11 +15,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 import { UserButton } from "../auth/UserButton";
 
-export default function Navbar({
-  isAuthenticated,
-}: {
-  isAuthenticated: boolean;
-}) {
+export default function Navbar({ user }: { user: User | null | undefined }) {
+  const isAuthenticated = Boolean(user && user.isAnonymous === false);
   const pathname = usePathname();
   const [isMenuOpen, setIsMenuOpen] = useState(false);
 
@@ -102,7 +100,7 @@ export default function Navbar({
             <div className="relative group">
               <div className="absolute -inset-1 bg-gradient-to-r from-blue-500 via-purple-500 to-pink-500 rounded-full opacity-0 group-hover:opacity-75 blur transition-opacity duration-300"></div>
               <div className="relative">
-                <UserButton />
+                <UserButton callbackURL={pathname} user={user ?? undefined} />
               </div>
             </div>
           )}
@@ -182,7 +180,7 @@ export default function Navbar({
 
               {isAuthenticated && (
                 <div className="px-2 pt-4 mt-2 border-t-2 border-purple-500/20">
-                  <UserButton />
+                  <UserButton callbackURL={pathname} user={user ?? undefined} />
                 </div>
               )}
             </div>

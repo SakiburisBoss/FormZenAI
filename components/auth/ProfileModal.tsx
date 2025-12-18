@@ -11,6 +11,7 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { User } from "@/lib/auth";
 import { uploadToCloudinary } from "@/lib/cloudinary-upload";
 import { useActionState, useEffect, useState } from "react";
 import { toast } from "sonner";
@@ -18,17 +19,14 @@ import { toast } from "sonner";
 type ProfileModalProps = {
   open: boolean;
   onOpenChangeAction: (open: boolean) => void;
-  user: {
-    name: string | null;
-    image?: string | null;
-  };
+  user?: User;
 };
 export function ProfileModal({
   open,
   onOpenChangeAction,
   user,
 }: ProfileModalProps) {
-  const [avatar, setAvatar] = useState(user.image);
+  const [avatar, setAvatar] = useState(user?.image);
   const [uploading, setUploading] = useState(false);
 
   const [profileState, updateAction, isPending] = useActionState(
@@ -82,7 +80,7 @@ export function ProfileModal({
 
           <div className="flex flex-col gap-1">
             <Label>Name</Label>
-            <Input name="name" defaultValue={user.name || ""} required />
+            <Input name="name" defaultValue={user?.name ?? ""} required />
           </div>
 
           <Button type="submit" className="w-full">

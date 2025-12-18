@@ -5,7 +5,7 @@ import { GoogleGenerativeAI } from "@google/generative-ai";
 import { revalidatePath, updateTag } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
-import { getUser } from "../user/getUser";
+import { getUser } from "../user/get-user";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 

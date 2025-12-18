@@ -1,7 +1,10 @@
+import Session from "@/components/auth/Session";
 import NavbarServer from "@/components/nav/NavServer";
+import Footer from "@/components/section/footer";
 import { Toaster } from "@/components/ui/sonner";
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
+import { Suspense } from "react";
 import "./globals.css";
 
 const geistSans = Geist({
@@ -33,17 +36,14 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
+        <Suspense fallback={<div>Loading...</div>}>
+          <Session />
+        </Suspense>
         <header>
           <NavbarServer />
         </header>
         <main className="pt-16">{children}</main>
-        <footer>
-          <div className="w-full h-20 border-t flex items-center justify-center">
-            <p className="text-sm text-gray-500">
-              &copy; 2026 Form Zen AI. All rights reserved. Created by Sakibur.
-            </p>
-          </div>
-        </footer>
+        <Footer />
         <Toaster />
       </body>
     </html>

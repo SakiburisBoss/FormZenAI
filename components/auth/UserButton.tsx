@@ -1,6 +1,5 @@
 "use client";
 
-import { authClient } from "@/lib/auth-client";
 import { useState } from "react";
 
 import {
@@ -10,20 +9,24 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
+import { signOut } from "@/actions/auth-actions";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
+import { User } from "@/lib/auth";
 import { LogOut, Settings } from "lucide-react";
 import { ProfileModal } from "./ProfileModal";
 
-export function UserButton() {
-  const session = authClient.useSession();
+export function UserButton({
+  callbackURL,
+  user,
+}: {
+  callbackURL?: string;
+  user?: User;
+}) {
   const [openProfile, setOpenProfile] = useState(false);
 
-  if (!session.data) return null;
-  const user = session.data.user;
-
   const handleSignOut = async () => {
-    await authClient.signOut();
+    await signOut({ callbackURL: callbackURL || "/" });
   };
 
   return (
@@ -34,15 +37,15 @@ export function UserButton() {
           className="flex items-center gap-2 px-3 py-1 rounded-full"
         >
           <Avatar className="w-9 h-9">
-            <AvatarImage src={user.image || ""} />
-            <AvatarFallback>{user.name?.charAt(0) || "U"}</AvatarFallback>
+            <AvatarImage src={user?.image ?? ""} />
+            <AvatarFallback>{user?.name?.charAt(0) ?? "U"}</AvatarFallback>
           </Avatar>
           <div className="flex flex-col text-left">
             <span className="text-sm font-medium text-gray-800 dark:text-gray-200">
-              {user.name || "Unknown User"}
+              {user?.name ?? "Unknown User"}
             </span>
             <span className="text-xs text-gray-500 dark:text-gray-400">
-              {user.email || "No email"}
+              {user?.email ?? "No email"}
             </span>
           </div>
         </Button>

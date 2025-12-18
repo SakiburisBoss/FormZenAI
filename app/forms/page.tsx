@@ -1,4 +1,4 @@
-import { getUser } from "@/actions/user/getUser";
+import { getUser } from "@/actions/user/get-user";
 import { CopyLinkButton } from "@/components/button/copy-link";
 import GenerateFormInput from "@/components/form/GenerateFormInput";
 import { Badge } from "@/components/ui/badge";
@@ -191,9 +191,9 @@ const FormsContent = async ({ userId }: { userId: string }) => {
           ) : (
             <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
               {allForms.map((form) => {
-                const content = form.content as {
-                  title?: string;
-                  description?: string;
+                const content = (form.content ?? {}) as {
+                  formTitle?: string;
+                  formFields?: Array<Record<string, any>>;
                 };
                 const submissionCount = submissions.filter(
                   (sub) => sub.formId === form.id,
@@ -223,10 +223,12 @@ const FormsContent = async ({ userId }: { userId: string }) => {
                       <div className="flex items-start justify-between gap-2">
                         <div className="flex-1 min-w-0">
                           <CardTitle className="text-lg font-bold mb-1 truncate">
-                            {content?.title || "Untitled Form"}
+                            {content?.formTitle || "Untitled Form"}
                           </CardTitle>
                           <CardDescription className="line-clamp-2 text-xs">
-                            {content?.description || "No description"}
+                            {(content?.formFields?.length ?? 0) > 0
+                              ? `${content?.formFields?.length} fields`
+                              : "No description"}
                           </CardDescription>
                         </div>
                         <Badge
@@ -317,7 +319,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
 
         {submissions.length > 0 && (
           <div className="space-y-6">
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
               <div>
                 <h2 className="text-3xl font-bold bg-gradient-to-r from-green-600 to-emerald-600 bg-clip-text text-transparent">
                   Recent Submissions
@@ -328,13 +330,11 @@ const FormsContent = async ({ userId }: { userId: string }) => {
               </div>
             </div>
 
-            <div className="grid gap-4">
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
               {submissions.slice(0, 5).map((submission) => {
-                const content = submission.content as {
-                  [key: string]: string;
-                };
-                const formContent = submission.form.content as {
-                  title?: string;
+                const content = submission.content as Record<string, string>;
+                const formContent = (submission.form.content ?? {}) as {
+                  formTitle?: string;
                 };
 
                 const gradients = [
@@ -349,26 +349,25 @@ const FormsContent = async ({ userId }: { userId: string }) => {
                 return (
                   <Card
                     key={submission.id}
-                    className="hover:shadow-lg transition-shadow"
+                    className="hover:shadow-lg transition-shadow flex flex-col"
                   >
-                    <CardHeader className="pb-3">
-                      <div className="flex items-start justify-between gap-4">
-                        <div className="flex-1 min-w-0">
-                          <CardTitle className="text-base font-semibold truncate">
-                            {formContent?.title || "Untitled Form"}
-                          </CardTitle>
-                          <CardDescription className="text-xs mt-1">
-                            Submitted on{" "}
-                            {new Date(submission.createdAt).toLocaleString()}
-                          </CardDescription>
-                        </div>
-                        <div
-                          className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${gradient} text-white shrink-0`}
-                        >
-                          New
-                        </div>
+                    <CardHeader className="pb-3 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+                      <div className="flex-1 min-w-0">
+                        <CardTitle className="text-base font-semibold truncate">
+                          {formContent?.formTitle ?? "Untitled Form"}
+                        </CardTitle>
+                        <CardDescription className="text-xs mt-1 break-words">
+                          Submitted on{" "}
+                          {new Date(submission.createdAt).toLocaleString()}
+                        </CardDescription>
+                      </div>
+                      <div
+                        className={`px-3 py-1 rounded-full text-xs font-semibold bg-gradient-to-r ${gradient} text-white shrink-0`}
+                      >
+                        New
                       </div>
                     </CardHeader>
+
                     <CardContent>
                       <div className="space-y-2">
                         {Object.entries(content)
@@ -376,14 +375,14 @@ const FormsContent = async ({ userId }: { userId: string }) => {
                           .map(([key, value]) => (
                             <div
                               key={key}
-                              className="flex items-start gap-2 text-sm"
+                              className="flex flex-col sm:flex-row items-start sm:items-center gap-2 text-sm"
                             >
                               <FileText className="w-4 h-4 text-muted-foreground shrink-0 mt-0.5" />
-                              <div className="flex-1 min-w-0">
+                              <div className="flex-1 min-w-0 break-words">
                                 <span className="font-medium text-muted-foreground">
                                   {key}:{" "}
                                 </span>
-                                <span className="text-foreground break-words">
+                                <span className="text-foreground">
                                   {String(value)}
                                 </span>
                               </div>
@@ -396,6 +395,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
                         )}
                       </div>
                     </CardContent>
+
                     <CardFooter className="pt-3 border-t">
                       <Button
                         asChild
@@ -414,7 +414,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
             </div>
 
             {submissions.length > 5 && (
-              <div className="text-center">
+              <div className="text-center mt-4">
                 <Button variant="outline" asChild>
                   <Link href="/forms">View All Submissions</Link>
                 </Button>
@@ -443,7 +443,10 @@ const FormsContent = async ({ userId }: { userId: string }) => {
 
 async function FormsWrapper() {
   const user = await getUser();
-  const userId = user!.id;
+  if (!user) {
+    throw new Error("User not found");
+  }
+  const userId = user.id;
 
   return <FormsContent userId={userId} />;
 }

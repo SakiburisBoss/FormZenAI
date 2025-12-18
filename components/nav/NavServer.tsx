@@ -1,11 +1,10 @@
-import { getUser } from "@/actions/user/getUser";
+import { getUser } from "@/actions/user/get-user";
 import { Suspense } from "react";
 import NavBar from "./Navbar";
 
 async function NavbarServer() {
   const user = await getUser();
-  const isAuthenticated = Boolean(user && user.isAnonymous === false);
-  return <NavBar isAuthenticated={isAuthenticated} />;
+  return <NavBar user={user} />;
 }
 const NavServer = () => {
   return (

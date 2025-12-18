@@ -1,8 +1,8 @@
 "use server";
 
-import { getUser } from "@/actions/user/getUser";
 import prisma from "@/lib/prisma";
 import { revalidatePath, updateTag } from "next/cache";
+import { getUser } from "../user/get-user";
 
 export const publishForm = async (formId: number | string) => {
   try {

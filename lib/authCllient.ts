@@ -6,10 +6,9 @@ import { createAuthClient } from "better-auth/react";
 import type { auth } from "./auth";
 
 export const authClient = createAuthClient({
-  baseURL: process.env.NEXT_PUBLIC_BETTER_AUTH_URL || "http://localhost:3000",
+  baseURL: (
+    (process.env.NEXT_PUBLIC_BETTER_AUTH_APP_URL as string) ||
+    "http://localhost:3000"
+  ).replace(/\/+$/, ""),
   plugins: [anonymousClient(), inferAdditionalFields<typeof auth>()],
 });
-
-// Export inferred types for client-side use
-export type Session = typeof authClient.$Infer.Session;
-export type User = typeof authClient.$Infer.Session.user;

@@ -13,28 +13,12 @@ export const auth = betterAuth({
   },
   socialProviders: {
     github: {
-      clientId: process.env.GITHUB_CLIENT_ID!,
-      clientSecret: process.env.GITHUB_CLIENT_SECRET!,
-      mapProfileToUser: (profile) => {
-        return {
-          name: profile.name || profile.login,
-          email: profile.email,
-          image: profile.avatar_url,
-          emailVerified: true,
-        };
-      },
+      clientId: process.env.GITHUB_CLIENT_ID as string,
+      clientSecret: process.env.GITHUB_CLIENT_SECRET as string,
     },
     google: {
-      clientId: process.env.GOOGLE_CLIENT_ID!,
-      clientSecret: process.env.GOOGLE_CLIENT_SECRET!,
-      mapProfileToUser: (profile) => {
-        return {
-          name: profile.name,
-          email: profile.email,
-          image: profile.picture,
-          emailVerified: profile.email_verified || false,
-        };
-      },
+      clientId: process.env.GOOGLE_CLIENT_ID as string,
+      clientSecret: process.env.GOOGLE_CLIENT_SECRET as string,
     },
   },
   anonymous: {
@@ -50,7 +34,6 @@ export const auth = betterAuth({
       updateUserInfoOnLink: true,
     },
   },
-
   user: {
     additionalFields: {
       isAnonymous: {
@@ -68,25 +51,22 @@ export const auth = betterAuth({
         console.log(
           `🔄 Transferring data from ${anonymousUser.user.id} to ${newUser.user.id}`,
         );
-
-        try {
-          const transferredForms = await prisma.form.updateMany({
-            where: {
-              ownerId: anonymousUser.user.id,
-            },
-            data: {
-              ownerId: newUser.user.id,
-            },
-          });
-
-          console.log(`✅ Transferred ${transferredForms.count} forms`);
-        } catch (error) {
-          console.error("❌ Error transferring data:", error);
-        }
+        await prisma.user.update({
+          where: { id: anonymousUser.user.id },
+          data: {
+            id: newUser.user.id,
+            createdAt: newUser.user.createdAt,
+            updatedAt: newUser.user.updatedAt,
+            email: newUser.user.email,
+            name: newUser.user.name,
+            emailVerified: newUser.user.emailVerified,
+            image: newUser.user.image,
+            isAnonymous: false,
+          },
+        });
       },
     }),
   ],
 });
-
 export type Session = typeof auth.$Infer.Session;
 export type User = typeof auth.$Infer.Session.user;
