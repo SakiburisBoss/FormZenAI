@@ -1,5 +1,5 @@
 import { getTotalFormsOfUser } from "@/actions/forms/total-forms-of-user";
-import { getUser } from "@/actions/user/getUser";
+import { getUser } from "@/actions/user/get-user";
 import GenerateFormInput from "@/components/form/GenerateFormInput";
 import { Button } from "@/components/ui/button";
 import {

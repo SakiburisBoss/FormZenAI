@@ -67,7 +67,7 @@ export function ProfileModal({
         <form action={updateAction} className="flex flex-col gap-4">
           <div className="flex flex-col items-center gap-2">
             <Avatar className="w-20 h-20">
-              <AvatarImage src={avatar || ""} />
+              <AvatarImage src={avatar ?? ""} />
             </Avatar>
 
             <Input type="file" accept="image/*" onChange={handleAvatarChange} />
