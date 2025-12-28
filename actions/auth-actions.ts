@@ -1,3 +1,4 @@
+
 "use server";
 
 import { auth } from "@/lib/auth";
@@ -5,6 +6,7 @@ import { revalidatePath } from "next/cache";
 import { headers } from "next/headers";
 import { redirect } from "next/navigation";
 import * as z from "zod";
+import { isRedirectError } from "next/dist/client/components/redirect-error";
 
 const signInSchema = z.object({
   email: z.email("Invalid email address"),
@@ -68,9 +70,15 @@ export const signUp = async (formData: FormData) => {
     revalidatePath(validatedData.callbackURL ?? "/");
     redirectTo = validatedData.callbackURL ?? "/";
   } catch (error) {
-    redirect(
-      `/auth?error=${encodeURIComponent("An unexpected error occurred. Please try again")}`,
-    );
+    if (isRedirectError(error)) {
+       throw error; // IMPORTANT: allow Next.js redirect to work
+     }
+   
+     redirect(
+       `/auth?error=${encodeURIComponent(
+         "Something went wrong while creating your account. Please try again."
+       )}`
+     );
   }
 
   if (redirectTo) {
@@ -112,9 +120,15 @@ export const signIn = async (formData: FormData) => {
     revalidatePath(validatedData.callbackURL ?? "/");
     redirectTo = validatedData.callbackURL ?? "/";
   } catch (error) {
-    redirect(
-      `/auth?error=${encodeURIComponent("An unexpected error occurred. Please try again")}`,
-    );
+    if (isRedirectError(error)) {
+       throw error;
+     }
+   
+     redirect(
+       `/auth?error=${encodeURIComponent(
+         "Unable to sign in. Please check your credentials and try again."
+       )}`
+     );
   }
 
   if (redirectTo) {

@@ -1,5 +1,6 @@
 import AiGeneratedForm from "@/components/form/AIGeneratedForm";
 import { Card, CardContent } from "@/components/ui/card";
+import { Form } from "@/lib/generated/prisma/client";
 import prisma from "@/lib/prisma";
 
 const Edit = async ({ params }: { params: Promise<{ formId: string }> }) => {
@@ -10,7 +11,7 @@ const Edit = async ({ params }: { params: Promise<{ formId: string }> }) => {
     return <h1>No form id found for id {formId}</h1>;
   }
 
-  const form: any = await prisma.form.findUnique({
+  const form: Form | null = await prisma.form.findUnique({
     where: {
       id: Number(formId),
     },

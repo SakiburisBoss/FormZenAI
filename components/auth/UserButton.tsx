@@ -26,7 +26,7 @@ export function UserButton({
   const [openProfile, setOpenProfile] = useState(false);
 
   const handleSignOut = async () => {
-    await signOut({ callbackURL: callbackURL || "/" });
+    await signOut({ callbackURL: callbackURL ?? "/" });
   };
 
   return (

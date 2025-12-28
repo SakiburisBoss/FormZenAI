@@ -1,3 +1,4 @@
+
 import { signIn, signInSocial, signUp } from "@/actions/auth-actions";
 import { GithubIcon } from "@/components/icons/github";
 import { GoogleIcon } from "@/components/icons/google";
@@ -13,7 +14,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { headers } from "next/headers";
 import Link from "next/link";
 
 export default async function AuthPage({
@@ -22,15 +22,16 @@ export default async function AuthPage({
   searchParams?: Promise<{
     error?: string;
     mode?: "signin" | "signup";
+    callbackURL?: string;
   }>;
 }) {
   const mode = (await searchParams)?.mode ?? "signin";
   const error = (await searchParams)?.error;
-  let referer = (await headers()).get("referer");
-  if (!referer) return (referer = "/");
-  const callbackURL = new URL(referer).pathname;
+  const callbackURL = (await searchParams)?.callbackURL ?? "/";
 
   return (
+    <>
+   <ServerActionToast error={error} />
     <div className="min-h-screen flex items-center justify-center p-6">
       <Card className="w-full max-w-md">
         <CardHeader className="text-center">
@@ -44,15 +45,13 @@ export default async function AuthPage({
           </CardDescription>
         </CardHeader>
 
-        <CardContent className="space-y-4">
-          <ServerActionToast error={error} />
-
+        <CardContent className="space-y-4">    
           {/* Social login */}
           <div className="space-y-2">
             <form
               action={async () => {
                 "use server";
-                await signInSocial("google", callbackURL);
+                await signInSocial("google", callbackURL );
               }}
             >
               <Button variant="outline" className="w-full">
@@ -63,7 +62,7 @@ export default async function AuthPage({
             <form
               action={async () => {
                 "use server";
-                await signInSocial("github", callbackURL);
+                await signInSocial("github", callbackURL );
               }}
             >
               <Button variant="outline" className="w-full">
@@ -80,7 +79,7 @@ export default async function AuthPage({
           {/* SIGN IN */}
           {mode === "signin" && (
             <form action={signIn} className="grid gap-3">
-              <input type="hidden" name="callbackURL" value={callbackURL} />
+              <input type="hidden" name="callbackURL" value={callbackURL } />
               <div>
                 <Label>Email</Label>
                 <Input name="email" type="email" required />
@@ -100,7 +99,7 @@ export default async function AuthPage({
           {/* SIGN UP */}
           {mode === "signup" && (
             <form action={signUp} className="grid gap-3">
-              <input type="hidden" name="callbackURL" value={callbackURL} />
+              <input type="hidden" name="callbackURL" value={callbackURL } />
               <div>
                 <Label>Name</Label>
                 <Input name="name" required />
@@ -141,5 +140,6 @@ export default async function AuthPage({
         </CardFooter>
       </Card>
     </div>
+    </>
   );
 }

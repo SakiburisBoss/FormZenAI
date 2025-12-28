@@ -1,6 +1,8 @@
+import { FormField } from "@/actions/forms/generate-form";
 import { getUser } from "@/actions/user/get-user";
 import { CopyLinkButton } from "@/components/button/copy-link";
 import GenerateFormInput from "@/components/form/GenerateFormInput";
+import RequireAuth from "@/components/require-auth";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import {
@@ -177,7 +179,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
                   <Sparkles className="h-10 w-10 text-white" />
                 </div>
                 <CardTitle className="mb-2 text-2xl">
-                  No forms yet! Let's create one
+                  No forms yet! Let&apos;s create one
                 </CardTitle>
                 <CardDescription className="mb-6 text-center max-w-md">
                   Start by describing your form in plain text, and our AI will
@@ -193,7 +195,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
               {allForms.map((form) => {
                 const content = (form.content ?? {}) as {
                   formTitle?: string;
-                  formFields?: Array<Record<string, any>>;
+                  formFields?: FormField[];
                 };
                 const submissionCount = submissions.filter(
                   (sub) => sub.formId === form.id,
@@ -444,7 +446,7 @@ const FormsContent = async ({ userId }: { userId: string }) => {
 async function FormsWrapper() {
   const user = await getUser();
   if (!user) {
-    throw new Error("User not found");
+    return <RequireAuth  />;
   }
   const userId = user.id;
 
