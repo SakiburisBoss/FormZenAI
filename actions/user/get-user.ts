@@ -1,4 +1,4 @@
-"use cache: private";
+"use server";
 
 import type { User } from "@/lib/auth";
 import { auth } from "@/lib/auth";
